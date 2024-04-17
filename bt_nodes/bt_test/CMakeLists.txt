@@ -14,12 +14,14 @@ find_package(behaviortree_cpp_v3 REQUIRED)
 find_package(geometry_msgs REQUIRED)
 find_package(audio_common_msgs REQUIRED)
 find_package(whisper_msgs REQUIRED)
+find_package(llama_msgs REQUIRED)
 find_package(configuration REQUIRED)
 find_package(motion REQUIRED)
 find_package(perception REQUIRED)
 find_package(arm REQUIRED)
 find_package(tf2_ros REQUIRED)
 find_package(hri REQUIRED)
+find_package(perception_system_interfaces REQUIRED)
 
 set(CMAKE_CXX_STANDARD 17)
 
@@ -29,6 +31,7 @@ set(dependencies
   behaviortree_cpp_v3
   audio_common_msgs
   whisper_msgs
+  llama_msgs
   configuration
   motion
   perception
@@ -36,6 +39,7 @@ set(dependencies
   hri
   arm
   geometry_msgs
+  perception_system_interfaces
 )
 
 # Set WP test
@@ -105,8 +109,44 @@ target_link_libraries(generate_text_from_objects_test hri::generate_text_from_ob
 # pick_demo test
 add_executable(pick_demo_test src/pick_demo_test.cpp)
 ament_target_dependencies(pick_demo_test ${dependencies})
-target_link_libraries(pick_demo_test arm::pick_bt_node hri::generate_text_from_objects_bt_node perception::extract_object_from_scene_bt_node hri::speak_bt_node hri::dialogConfirmation_bt_node) 
+target_link_libraries(pick_demo_test
+  arm::pick_bt_node
+  hri::generate_text_from_objects_bt_node
+  perception::extract_object_from_scene_bt_node
+  perception::extract_collision_scene_bt_node
+  hri::speak_bt_node
+  hri::dialogConfirmation_bt_node
+)
 
+# Ask test
+add_executable(ask_test src/ask_test.cpp)
+ament_target_dependencies(ask_test ${dependencies})
+target_link_libraries(ask_test hri::query_bt_node hri::speak_bt_node hri::listen_bt_node hri::dialogConfirmation_bt_node)
+
+# init_carry test
+add_executable(init_carry src/init_carry_test.cpp)
+ament_target_dependencies(init_carry ${dependencies})
+target_link_libraries(configuration::init_carry_bt_node)
+
+# follow_person test
+add_executable(follow_person_test src/follow_person_test.cpp)
+ament_target_dependencies(follow_person_test ${dependencies})
+target_link_libraries(follow_person_test perception::follow_person_bt_node)
+
+# carry my luggage test
+add_executable(carry_my_luggage_test src/carry_my_luggage_test.cpp)
+ament_target_dependencies(carry_my_luggage_test ${dependencies})
+target_link_libraries(carry_my_luggage_test
+  configuration::init_carry_bt_node
+  perception::is_detected_bt_node
+  perception::is_pointing_bt_node
+  perception::is_entity_moving_bt_node
+  arm::move_to_predefined_bt_node
+  motion::move_to_bt_node
+  motion::look_at_bt_node
+  hri::speak_bt_node
+  hri::dialogConfirmation_bt_node
+)
 
 install(TARGETS
   set_wp_test
@@ -120,9 +160,13 @@ install(TARGETS
   is_detected_moveto_loop_test
   follow_test
   speak_test
+  ask_test
   extract_object_from_scene_test
   generate_text_from_objects_test
   pick_demo_test
+  follow_person_test
+  init_carry
+  carry_my_luggage_test
   ARCHIVE DESTINATION lib
   LIBRARY DESTINATION lib
   RUNTIME DESTINATION lib/${PROJECT_NAME}
