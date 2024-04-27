@@ -184,6 +184,13 @@ target_link_libraries(storing_groceries_test
   #perception::find_correct_place_bt_node #To implement
   #arm::place_object_bt_node #To implement
 )
+add_executable(inspection_test src/inspection_test.cpp)
+ament_target_dependencies(inspection_test ${dependencies})
+target_link_libraries(inspection_test
+  configuration::set_wp_bt_node
+  perception::is_door_open_bt_node
+  motion::move_to_bt_node
+)
 
 install(TARGETS
   set_wp_test
@@ -206,6 +213,7 @@ install(TARGETS
   carry_my_luggage_test
   receptionist_test
   storing_groceries_test
+  inspection_test
   ARCHIVE DESTINATION lib
   LIBRARY DESTINATION lib
   RUNTIME DESTINATION lib/${PROJECT_NAME}
