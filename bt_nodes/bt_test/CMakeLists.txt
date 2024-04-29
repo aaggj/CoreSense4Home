@@ -9,6 +9,7 @@ set(CMAKE_BUILD_TYPE Debug)
 
 find_package(ament_cmake REQUIRED)
 find_package(rclcpp REQUIRED)
+find_package(rclcpp_cascade_lifecycle REQUIRED)
 find_package(rclcpp_action REQUIRED)
 find_package(behaviortree_cpp_v3 REQUIRED)
 find_package(geometry_msgs REQUIRED)
@@ -27,6 +28,7 @@ set(CMAKE_CXX_STANDARD 17)
 
 set(dependencies
   rclcpp
+  rclcpp_cascade_lifecycle
   rclcpp_action
   behaviortree_cpp_v3
   audio_common_msgs
@@ -110,7 +112,7 @@ target_link_libraries(generate_text_from_objects_test hri::generate_text_from_ob
 add_executable(pick_demo_test src/pick_demo_test.cpp)
 ament_target_dependencies(pick_demo_test ${dependencies})
 target_link_libraries(pick_demo_test
-  arm::pick_bt_node
+  arm::pick_object_bt_node
   hri::generate_text_from_objects_bt_node
   perception::extract_object_from_scene_bt_node
   perception::extract_collision_scene_bt_node
@@ -148,6 +150,48 @@ target_link_libraries(carry_my_luggage_test
   hri::dialogConfirmation_bt_node
 )
 
+add_executable(receptionist_test src/receptionist_test.cpp)
+ament_target_dependencies(receptionist_test ${dependencies})
+target_link_libraries(receptionist_test
+  configuration::set_wp_bt_node
+  # configuration::init_receptionist_bt_node
+  motion::move_to_bt_node
+  hri::speak_bt_node
+  perception::is_detected_bt_node
+  # perception::store_detection_bt_node
+  motion::look_at_bt_node
+  hri::listen_bt_node
+  hri::query_bt_node
+  hri::dialogConfirmation_bt_node
+  # motion::look_around_bt_node
+  # perception::is_sitiable_bt_node
+  # arm::point_at_bt_node
+  arm::move_to_predefined_bt_node
+  # configuration::add_guest_to_count_bt_node
+)
+add_executable(storing_groceries_test src/storing_groceries_test.cpp)
+ament_target_dependencies(storing_groceries_test ${dependencies})
+target_link_libraries(storing_groceries_test
+  configuration::set_wp_bt_node
+  # configuration::init_groceries_bt_node To implement
+  motion::move_to_bt_node
+  perception::is_detected_bt_node
+  #motion::look_around_bt_node #To implement
+  motion::look_at_bt_node
+  arm::pick_object_bt_node
+  #arm::move_arm_to_bt_node #To implement
+  arm::move_to_predefined_bt_node
+  #perception::find_correct_place_bt_node #To implement
+  #arm::place_object_bt_node #To implement
+)
+add_executable(inspection_test src/inspection_test.cpp)
+ament_target_dependencies(inspection_test ${dependencies})
+target_link_libraries(inspection_test
+  configuration::set_wp_bt_node
+  perception::is_door_open_bt_node
+  motion::move_to_bt_node
+)
+
 install(TARGETS
   set_wp_test
   look_at_test
@@ -167,6 +211,9 @@ install(TARGETS
   follow_person_test
   init_carry
   carry_my_luggage_test
+  receptionist_test
+  storing_groceries_test
+  inspection_test
   ARCHIVE DESTINATION lib
   LIBRARY DESTINATION lib
   RUNTIME DESTINATION lib/${PROJECT_NAME}

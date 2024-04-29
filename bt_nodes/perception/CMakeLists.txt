@@ -7,6 +7,7 @@ endif()
 
 find_package(ament_cmake REQUIRED)
 find_package(rclcpp REQUIRED)
+find_package(rclcpp_cascade_lifecycle REQUIRED)
 find_package(behaviortree_cpp_v3 REQUIRED)
 find_package(yolov8_msgs REQUIRED)
 find_package(moveit_msgs REQUIRED)
@@ -18,11 +19,13 @@ find_package(tf2_geometry_msgs REQUIRED)
 find_package(tf2 REQUIRED)
 find_package(rclcpp_action REQUIRED)
 find_package(perception_system REQUIRED)
+find_package(perception_system_interfaces REQUIRED)
 
 set(CMAKE_CXX_STANDARD 17)
 
 set(dependencies
   rclcpp
+  rclcpp_cascade_lifecycle
   rclpy
   behaviortree_cpp_v3
   yolov8_msgs
@@ -35,6 +38,8 @@ set(dependencies
   rclcpp_action
   behaviortree_cpp_v3
   perception_system
+  perception_system_interfaces
+  sensor_msgs
 )
 
 include_directories(include)
@@ -56,6 +61,9 @@ list(APPEND plugin_libs is_entity_moving_bt_node)
 
 add_library(is_pointing_bt_node SHARED src/perception/is_pointing.cpp)
 list(APPEND plugin_libs is_pointing_bt_node)
+
+add_library(is_door_open_bt_node SHARED src/perception/IsDoorOpen.cpp)
+list(APPEND plugin_libs is_door_open_bt_node)
 
 foreach(bt_plugin ${plugin_libs})
 ament_target_dependencies(${bt_plugin} ${dependencies})

@@ -23,12 +23,15 @@
 #include "behaviortree_cpp_v3/behavior_tree.h"
 #include "behaviortree_cpp_v3/bt_factory.h"
 #include "arm/manipulation/BTActionNode.hpp"
+
 #include "rclcpp/rclcpp.hpp"
+#include "rclcpp_cascade_lifecycle/rclcpp_cascade_lifecycle.hpp"
 
 namespace manipulation
 {
 
-class PickObject : public manipulation::BtActionNode<manipulation_interfaces::action::Pick>
+class PickObject : public manipulation::BtActionNode<
+    manipulation_interfaces::action::Pick, rclcpp_cascade_lifecycle::CascadeLifecycleNode>
 {
 public:
   explicit PickObject(
@@ -45,13 +48,6 @@ public:
       {BT::InputPort<moveit_msgs::msg::CollisionObject::SharedPtr>(
           "object_to_pick")});
   }
-
-private:
-  // rclcpp::Node::SharedPtr node_;
-  //  rclcpp::ActionClient<audio_common_msgs::action::TTS>::SharedPtr
-  //  tts_action_;
-
-  // std::string text_;
 };
 
 } // namespace manipulation

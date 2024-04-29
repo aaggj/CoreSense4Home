@@ -9,6 +9,7 @@ endif()
 find_package(ament_cmake REQUIRED)
 find_package(behaviortree_cpp_v3 REQUIRED)
 find_package(rclcpp REQUIRED)
+find_package(rclcpp_cascade_lifecycle REQUIRED)
 find_package(rclcpp_action REQUIRED)
 find_package(manipulation_interfaces REQUIRED)
 # uncomment the following section in order to fill in
@@ -20,14 +21,15 @@ set(CMAKE_CXX_STANDARD 17)
 set(dependencies
   behaviortree_cpp_v3
   rclcpp
+  rclcpp_cascade_lifecycle
   rclcpp_action
   manipulation_interfaces
 )
 
 include_directories(include)
 
-add_library(pick_bt_node SHARED src/manipulation/pick_object.cpp)
-list(APPEND plugin_libs pick_bt_node)
+add_library(pick_object_bt_node SHARED src/manipulation/pick_object.cpp)
+list(APPEND plugin_libs pick_object_bt_node)
 
 add_library(move_to_predefined_bt_node SHARED src/manipulation/move_to_predefined.cpp)
 list(APPEND plugin_libs move_to_predefined_bt_node)

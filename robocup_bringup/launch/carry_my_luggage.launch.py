@@ -40,7 +40,7 @@ def generate_launch_description():
     carry_config = os.path.join(
         package_dir,
         'params',
-        'carry_params.yaml'
+        'carry_my_luggage.yaml'
         )
 
     # Configuration Variables
@@ -141,12 +141,13 @@ def generate_launch_description():
     #     }.items()
     # )
 
-    carry_my_luggage = Node(
-        package='bt_test',
-        executable='carry_my_luggage_test',
+    behavior = Node(
+        package='robocup_bringup',
+        executable='behaviors_main',
         parameters=[carry_config],
         output='screen',
-        namespace='perception_system'
+        namespace='',
+        prefix=['xterm -e gdb -ex run --args'],
     )
 
     # wait_for_navigation = RegisterEventHandler(
@@ -163,7 +164,7 @@ def generate_launch_description():
     # ld.add_action(navigation)
     # ld.add_action(manipulation_server)
     # ld.add_action(move_group)
-    ld.add_action(carry_my_luggage)
+    ld.add_action(behavior)
     # ld.add_action(declare_model_repo_cmd)
     # ld.add_action(declare_model_filename_cmd)
     # ld.add_action(whisper_cmd)
