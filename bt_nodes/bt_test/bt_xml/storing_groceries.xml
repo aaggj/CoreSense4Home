@@ -4,14 +4,14 @@
     <BehaviorTree ID="BehaviorTree">
         <Sequence>
             <Action ID="SetWp"/>
-            <Action ID="InitGroceries"/>
+            <!-- <Action ID="InitGroceries"/> -->
             <Repeat num_cycles="15">
                 <Sequence>
                     <Action ID="MoveTo" distance_tolerance="1" tf_frame="table"/>
                     <RetryUntilSuccessful num_attempts="-1">
                         <ReactiveFallback>
                             <Condition ID="IsDetected" confidence="0.6" entity="table" frames="" max_depth="2" max_entities="1" order="depth_nearest"/>
-                            <Action ID="LookAround" direction=""/>
+                            <!-- <Action ID="LookAround" direction=""/> -->
                         </ReactiveFallback>
                     </RetryUntilSuccessful>
                     <Action ID="MoveTo" distance_tolerance="0.2" tf_frame="table"/>
@@ -20,7 +20,7 @@
                             <Action ID="LookAt" tf_frame="table"/>
                             <Condition ID="IsDetected" confidence="0.6" entity="Bowl" frames="" max_depth="2" max_entities="1" order="depth_nearest"/>
                             <Action ID="PickObject" tf_frame="Bowl"/>
-                            <Action ID="MoveArmTo" tf_frame="camera_frame" tolerance="0.6"/>
+                            <!-- <Action ID="MoveArmTo" tf_frame="camera_frame" tolerance="0.6"/> -->
                             <Condition ID="IsDetected" confidence="0.6" entity="nearest" frames="" max_depth="2" max_entities="1" order="depth_nearest"/>
                             <Action ID="MoveArmToPredefined" position="home"/>
                         </Sequence>
@@ -33,8 +33,8 @@
                         </ReactiveFallback>
                     </RetryUntilSuccessful>
                     <Action ID="LookAt" tf_frame="shelf"/>
-                    <Action ID="FindCorrectPlace" tf_frame="nearest" tf_frame_to_put="to_place"/>
-                    <Action ID="PlaceObject" left_position="placed_at" position="tf"/>
+                    <!-- <Action ID="FindCorrectPlace" tf_frame="nearest" tf_frame_to_put="to_place"/> -->
+                    <!-- <Action ID="PlaceObject" left_position="placed_at" position="tf"/> -->
                 </Sequence>
             </Repeat>
         </Sequence>

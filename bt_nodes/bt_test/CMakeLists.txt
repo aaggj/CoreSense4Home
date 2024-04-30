@@ -182,7 +182,7 @@ target_link_libraries(storing_groceries_test
   #arm::move_arm_to_bt_node #To implement
   arm::move_to_predefined_bt_node
   #perception::find_correct_place_bt_node #To implement
-  #arm::place_object_bt_node #To implement
+  arm::place_object_bt_node 
 )
 add_executable(inspection_test src/inspection_test.cpp)
 ament_target_dependencies(inspection_test ${dependencies})
