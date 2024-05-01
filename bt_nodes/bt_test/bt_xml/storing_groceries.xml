@@ -34,7 +34,7 @@
                     </RetryUntilSuccessful>
                     <Action ID="LookAt" tf_frame="shelf"/>
                     <!-- <Action ID="FindCorrectPlace" tf_frame="nearest" tf_frame_to_put="to_place"/> -->
-                    <!-- <Action ID="PlaceObject" left_position="placed_at" position="tf"/> -->
+                    <Action ID="PlaceObject" left_position="placed_at" position="tf"/>
                 </Sequence>
             </Repeat>
         </Sequence>
