@@ -11,7 +11,7 @@
                     <RetryUntilSuccessful num_attempts="-1">
                         <ReactiveFallback>
                             <Condition ID="IsDetected" confidence="0.6" entity="table" frames="" max_depth="2" max_entities="1" order="depth_nearest"/>
-                            <!-- <Action ID="LookAround" direction=""/> -->
+                            <Action ID="Pan"/>
                         </ReactiveFallback>
                     </RetryUntilSuccessful>
                     <Action ID="MoveTo" distance_tolerance="0.2" tf_frame="table"/>
