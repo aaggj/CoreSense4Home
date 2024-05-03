@@ -71,6 +71,9 @@ private:
     const perception_system_interfaces::msg::Detection & detected_object,
     const std::string & frame_name);
 
+  bool setFoodInterest(const std::string & interest, std::vector<std::string> & frames);
+
+
   std::shared_ptr<rclcpp_cascade_lifecycle::CascadeLifecycleNode> node_;
   tf2::BufferCore tf_buffer_;
   tf2_ros::TransformListener tf_listener_;
@@ -81,6 +84,13 @@ private:
   std::vector<std::string> frames_;
 
   std::unique_ptr<tf2_ros::TransformBroadcaster> tf_broadcaster_;
+  std::vector<std::string> foods_ = {"7up", "Apple", "Bag", "Banana",
+   "Baseball", "Bowl", "Cheezit", "Chocolate_jello", "Cleanser", "Coffe_grounds",
+   "Cola", "Cornflakes", "Cup", "Dice", "Dishwasher_tab", "Fork", "Iced_Tea",
+   "Juice_pack", "Knife", "Lemon", "Milk", "Mustard", "Orange", "Orange_juice",
+   "Peach", "Pear", "Plate", "Plum", "Pringles", "Red_wine", "Rubiks_cube",
+   "Soccer_ball", "Spam", "Sponge", "Spoon", "Strawberry", "Strawberry_jello",
+   "Sugar", "Tennis_ball", "Tomato_soup", "Tropical_juice", "Tuna", "Water"};
 };
 
 }  // namespace perception

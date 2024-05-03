@@ -52,65 +52,117 @@ IsDetected::IsDetected(
   getInput("person_id", person_id_);
 }
 
+bool
+IsDetected::setFoodInterest(const std::string & interest, std::vector<std::string> & frames)
+{
+  pl::getInstance(node_)->set_interest(interest, true);
+  pl::getInstance(node_)->update(35);
+
+  auto detections = pl::getInstance(node_)->get_by_type(interest);
+
+  if (detections.empty()) {
+    return false;
+  }
+
+  auto entity_counter = 0;
+
+  for (auto it = detections.begin(); it != detections.end() && entity_counter < max_entities_; ) {
+        auto const & detection = *it;
+
+        if (detection.score <= threshold_ || detection.center3d.position.z > max_depth_) {
+          it = detections.erase(it);
+        } else {
+          frames.push_back(detection.class_name + "_" + std::to_string(entity_counter));
+          publicTF_map2object(detection, detection.class_name + "_" + std::to_string(entity_counter));
+          ++it;
+          ++entity_counter;
+        }
+      }
+
+      if (frames.empty()) {
+        RCLCPP_INFO(node_->get_logger(), "No detections after filter");
+        return false;
+      }
+
+      // setOutput("frames", frames_);
+      frames.clear();
+      RCLCPP_INFO(node_->get_logger(), "Detected!");
+      return true;
+
+  return true;
+}
+
 BT::NodeStatus
 IsDetected::tick()
 {
   RCLCPP_DEBUG(node_->get_logger(), "IsDetected ticked");
-  pl::getInstance(node_)->set_interest(interest_, true);
-  pl::getInstance(node_)->update(35);
-
-  auto detections = pl::getInstance(node_)->get_by_type(interest_);
-
-  if (detections.empty()) {
-    // RCLCPP_INFO(node_->get_logger(), "No detections");
-    return BT::NodeStatus::FAILURE;
-  }
-
-  if (order_ == "color") {
-    // sorted by the distance to the color person we should sort it by distance and also by left to right or right to left
-    std::sort(
-      detections.begin(), detections.end(),
-      [this](const auto & a, const auto & b) {
-        return perception_system::diffIDs(
-          this->person_id_,
-          a.color_person) <
-        perception_system::diffIDs(this->person_id_, b.color_person);
+  if (interest_ == "food") {
+    for (auto & item : foods_)
+    {
+      if (setFoodInterest(item, frames_)) {
+        setOutput("frames", frames_);
+        frames_.clear();
+        return BT::NodeStatus::SUCCESS;
       }
-    );
-  } else if (order_ == "depth") {
-    std::sort(
-      detections.begin(), detections.end(),
-      [this](const auto & a, const auto & b) {
-        return a.center3d.position.z < b.center3d.position.z;
-      }
-    );
-
-  }
-  // implement more sorting methods
-
-  auto entity_counter = 0;
-  for (auto it = detections.begin(); it != detections.end() && entity_counter < max_entities_; ) {
-    auto const & detection = *it;
-
-    if (detection.score <= threshold_ || detection.center3d.position.z > max_depth_) {
-      it = detections.erase(it);
-    } else {
-      frames_.push_back(detection.class_name + "_" + std::to_string(entity_counter));
-      publicTF_map2object(detection, detection.class_name + "_" + std::to_string(entity_counter));
-      ++it;
-      ++entity_counter;
     }
-  }
+  } else { // interest_ == "person"
 
-  if (frames_.empty()) {
-    RCLCPP_INFO(node_->get_logger(), "No detections after filter");
-    return BT::NodeStatus::FAILURE;
-  }
+      pl::getInstance(node_)->set_interest(interest_, true);
+      pl::getInstance(node_)->update(35);
 
-  setOutput("frames", frames_);
-  frames_.clear();
-  RCLCPP_INFO(node_->get_logger(), "Detected!");
-  return BT::NodeStatus::SUCCESS; //test, change to SUCCESS
+      auto detections = pl::getInstance(node_)->get_by_type(interest_);
+
+      if (detections.empty()) {
+        // RCLCPP_INFO(node_->get_logger(), "No detections");
+        return BT::NodeStatus::FAILURE;
+      }
+
+      if (order_ == "color") {
+        // sorted by the distance to the color person we should sort it by distance and also by left to right or right to left
+        std::sort(
+          detections.begin(), detections.end(),
+          [this](const auto & a, const auto & b) {
+            return perception_system::diffIDs(
+              this->person_id_,
+              a.color_person) <
+            perception_system::diffIDs(this->person_id_, b.color_person);
+          }
+        );
+      } else if (order_ == "depth") {
+        std::sort(
+          detections.begin(), detections.end(),
+          [this](const auto & a, const auto & b) {
+            return a.center3d.position.z < b.center3d.position.z;
+          }
+        );
+
+      }
+      // implement more sorting methods
+
+      auto entity_counter = 0;
+      for (auto it = detections.begin(); it != detections.end() && entity_counter < max_entities_; ) {
+        auto const & detection = *it;
+
+        if (detection.score <= threshold_ || detection.center3d.position.z > max_depth_) {
+          it = detections.erase(it);
+        } else {
+          frames_.push_back(detection.class_name + "_" + std::to_string(entity_counter));
+          publicTF_map2object(detection, detection.class_name + "_" + std::to_string(entity_counter));
+          ++it;
+          ++entity_counter;
+        }
+      }
+
+      if (frames_.empty()) {
+        RCLCPP_INFO(node_->get_logger(), "No detections after filter");
+        return BT::NodeStatus::FAILURE;
+      }
+
+      setOutput("frames", frames_);
+      frames_.clear();
+      RCLCPP_INFO(node_->get_logger(), "Detected!");
+      return BT::NodeStatus::SUCCESS; //test, change to SUCCESS
+    }
 }
 
 int
