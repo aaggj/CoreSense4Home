@@ -52,7 +52,7 @@
                         <Condition ID="IsSittable" tf_frame="chair_frame"/>
                         <Action ID="LookAround" direction="left"/>
                     </ReactiveFallback>
-                    <Action ID="PointAt" frame_to_point="chair_frame"/>
+                    <Action ID="PointAt" tf_frame="chair_frame"/>
                     <Action ID="LookAt" tf_frame="chair_frame"/>
                     <Action ID="Speak" say_text="Please, sit over there"/>
                     <Action ID="MoveArmToPredefined" position="home"/>
