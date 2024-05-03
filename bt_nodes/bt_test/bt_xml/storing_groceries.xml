@@ -20,7 +20,7 @@
                             <Action ID="LookAt" tf_frame="table"/>
                             <Condition ID="IsDetected" confidence="0.6" entity="Bowl" frames="" max_depth="2" max_entities="1" order="depth_nearest"/>
                             <Action ID="PickObject" tf_frame="Bowl"/>
-                            <!-- <Action ID="MoveArmTo" tf_frame="camera_frame" tolerance="0.6"/> -->
+                            <Action ID="PointAtTolerance" tf_frame="camera_frame" tolerance="0.6"/>
                             <Condition ID="IsDetected" confidence="0.6" entity="nearest" frames="" max_depth="2" max_entities="1" order="depth_nearest"/>
                             <Action ID="MoveArmToPredefined" position="home"/>
                         </Sequence>
