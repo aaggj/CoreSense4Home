@@ -12,12 +12,12 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 
-#include "configuration/init_carry.hpp"
+#include "configuration/init_groceries.hpp"
 
 namespace configuration
 {
 
-InitCarry::InitCarry(
+InitGroceries::InitGroceries(
   const std::string & xml_tag_name,
   const BT::NodeConfiguration & conf)
 : BT::ActionNodeBase(xml_tag_name, conf)
@@ -32,9 +32,9 @@ InitCarry::InitCarry(
 }
 
 BT::NodeStatus
-InitCarry::tick()
+InitGroceries::tick()
 {
-  RCLCPP_INFO(node_->get_logger(), "InitCarry ticked");
+  RCLCPP_INFO(node_->get_logger(), "InitGroceries ticked");
   std::vector<double> pose_;
 
   if (node_->has_parameter("cam_frame") &&
@@ -65,28 +65,28 @@ InitCarry::tick()
       config().blackboard->set("person_id", person_id);
       config().blackboard->set("home_position", home_position_);
 
-      RCLCPP_INFO(node_->get_logger(), "InitCarry ticked and parameters set");
+      RCLCPP_INFO(node_->get_logger(), "InitGroceries ticked and parameters set");
       RCLCPP_INFO(node_->get_logger(), "cam_frame: %s", cam_frame_.c_str());
       return BT::NodeStatus::SUCCESS;
     } catch (std::exception & e) {
-      RCLCPP_ERROR(node_->get_logger(), "InitCarry: some parameters are missing");
+      RCLCPP_ERROR(node_->get_logger(), "InitGroceries: some parameters are missing");
       return BT::NodeStatus::FAILURE;
     }
   } else {
-    RCLCPP_ERROR(node_->get_logger(), "InitCarry: some parameters are missing");
+    RCLCPP_ERROR(node_->get_logger(), "InitGroceries: some parameters are missing");
     return BT::NodeStatus::FAILURE;
   }
 }
 
 void
-InitCarry::halt()
+InitGroceries::halt()
 {
-  RCLCPP_INFO(node_->get_logger(), "InitCarry halted");
+  RCLCPP_INFO(node_->get_logger(), "InitGroceries halted");
 }
 
 }  // namespace configuration
 
 BT_REGISTER_NODES(factory)
 {
-  factory.registerNodeType<configuration::InitCarry>("InitCarry");
+  factory.registerNodeType<configuration::InitGroceries>("InitGroceries");
 }

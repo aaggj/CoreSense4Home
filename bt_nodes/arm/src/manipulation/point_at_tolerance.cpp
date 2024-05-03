@@ -87,7 +87,7 @@ BT::NodeStatus PointAtTolerance::on_success() {return BT::NodeStatus::SUCCESS;}
 BT_REGISTER_NODES(factory)
 {
   BT::NodeBuilder builder = [](const std::string & name, const BT::NodeConfiguration & config) {
-      return std::make_unique<manipulation::PointAtTolerance>(name, "move_end_effector", config);
+      return std::make_unique<manipulation::PointAtTolerance>(name, "/point_at_tolerance", config);
     };
 
   factory.registerBuilder<manipulation::PointAtTolerance>("PointAtTolerance", builder);

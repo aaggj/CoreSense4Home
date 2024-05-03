@@ -12,8 +12,8 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 
-#ifndef CONFIGURATION__INIT_CARRY_HPP_
-#define CONFIGURATION__INIT_CARRY_HPP_
+#ifndef CONFIGURATION__INIT_GROCERIES_HPP_
+#define CONFIGURATION__INIT_GROCERIES_HPP_
 
 #include <string>
 #include "behaviortree_cpp_v3/behavior_tree.h"
@@ -28,10 +28,10 @@
 namespace configuration
 {
 
-class InitCarry : public BT::ActionNodeBase
+class InitGroceries : public BT::ActionNodeBase
 {
 public:
-  explicit InitCarry(
+  explicit InitGroceries(
     const std::string & xml_tag_name,
     const BT::NodeConfiguration & conf);
 
@@ -53,4 +53,4 @@ private:
 
 }  // namespace configuration
 
-#endif  // CONFIGURATION__INIT_CARRY_HPP_
+#endif  // CONFIGURATION__INIT_GROCERIES_HPP_
